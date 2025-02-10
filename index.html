@@ -20,7 +20,7 @@
             flex-direction: column;
             overflow: hidden;
         }
- 
+
         .container {
             background-color: #fff;
             padding: 20px;
@@ -31,25 +31,25 @@
             position: relative;
             z-index: 1;
         }
- 
+
         h1 {
             font-size: 2rem;
             color: #e63946;
             animation: fadeIn 2s ease-in-out;
         }
- 
+
         .question, .answer {
             font-size: 1.2rem;
             margin: 20px;
         }
- 
+
         .button-container {
             display: flex;
             justify-content: center;
             gap: 10px;
             align-items: center;
         }
- 
+
         .yes, .no {
             padding: 10px 20px;
             font-size: 1rem;
@@ -60,21 +60,21 @@
             border: none;
             border-radius: 5px;
         }
- 
+
         .yes:hover, .no:hover {
             background-color: #f1a7c1;
         }
- 
+
         .yes {
             color: #fff;
             background-color: #e63946;
         }
- 
+
         .no {
             color: #fff;
             background-color: #6c757d;
         }
- 
+
         #noMessages {
             display: none;
             font-size: 1rem;
@@ -90,41 +90,41 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
- 
+
         #finalMessage p {
             font-size: 1rem;
             line-height: 1.6;
             margin: 10px 0;
             animation: fadeIn 1s ease-in-out;
         }
- 
+
         #finalMessage {
             text-align: left;
             padding: 20px;
             background-color: #fff3f5;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            display: none;
+            display: none; /* Nascondi all'inizio */
         }
- 
+
         #mocha-emoji {
             margin-top: 20px;
-            display: none;
+            display: none; /* Nascondi all'inizio */
         }
- 
+
         #love-counter {
-            display: none;
+            display: none; /* Nascondi all'inizio */
             margin-top: 20px;
             font-size: 1.2rem;
             color: #e63946;
         }
- 
+
         /* Animazione per i cuori */
         @keyframes fall {
             0% { transform: translateY(-100%); }
             100% { transform: translateY(100vh); }
         }
- 
+
         .heart {
             position: absolute;
             color: #e63946;
@@ -133,7 +133,7 @@
             user-select: none;
             display: none;
         }
- 
+
         .heart:nth-child(1) { left: 5%; animation-delay: 0s; }
         .heart:nth-child(2) { left: 15%; animation-delay: 1s; }
         .heart:nth-child(3) { left: 25%; animation-delay: 2s; }
@@ -143,17 +143,17 @@
         .heart:nth-child(7) { left: 65%; animation-delay: 6s; }
         .heart:nth-child(8) { left: 75%; animation-delay: 7s; }
         .heart:nth-child(9) { left: 85%; animation-delay: 8s; }
- 
+
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
- 
+
         @keyframes flash {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
- 
+
         /* Media query per dispositivi mobili */
         @media (max-width: 600px) {
             .container {
@@ -161,23 +161,23 @@
                 max-width: none;
                 padding: 10px;
             }
- 
+
             h1 {
                 font-size: 1.8rem;
             }
- 
+
             .question, .answer {
                 font-size: 1rem;
             }
- 
+
             #finalMessage p {
                 font-size: 0.9rem;
             }
- 
+
             #love-counter {
                 font-size: 1rem;
             }
- 
+
             .heart {
                 font-size: 16px;
             }
@@ -196,10 +196,10 @@
     <div class="heart">❤️</div>
     <div class="heart">❤️</div>
     <div class="heart">❤️</div>
- 
+
     <div class="container">
         <h1>Happy Valentine's Day, Freya!</h1>
- 
+
         <div class="question" id="question">
             <p>Will you be my valentine?</p>
             <div class="button-container">
@@ -210,11 +210,11 @@
                 <button class="no" id="noButton">No</button>
             </div>
         </div>
- 
+
         <div id="noMessages">
             <p id="messageText">You sure?</p>
         </div>
- 
+
         <div id="finalMessage">
             <p>Ich hätte nie erwartet, eine solche Person wie dich kennenzulernen.</p>
             <p>Du hast so viele wunderbare Eigenschaften: Du bist intelligent, liebenswürdig, fürsorglich und reif.</p>
@@ -225,20 +225,23 @@
             <p>Ich liebe dich wahnsinnig.</p>
             <p>Frohen Valentinstag, Freya.</p>
         </div>
- 
+
         <!-- Contatore di "Ich liebe dich" -->
         <div id="love-counter">
             <p>Ich liebe dich <span id="count">0</span> Mal. 💖</p>
         </div>
     </div>
- 
+
     <!-- Emoji di Mocha -->
     <div id="mocha-emoji">
         <a href="https://emoji.gg/emoji/56142-mocha">
             <img src="https://cdn3.emoji.gg/emojis/56142-mocha.gif" width="128px" height="128px" alt="Mocha">
         </a>
     </div>
- 
+
+    <!-- Elemento audio per la canzone -->
+    <audio id="valentineSong" src="valentine.mp3"></audio>
+
     <script>
         let yesButton = document.getElementById('yesButton');
         let noButton = document.getElementById('noButton');
@@ -249,28 +252,34 @@
         let mochaEmoji = document.getElementById('mocha-emoji');
         let loveCounter = document.getElementById('love-counter');
         let yesSize = 1;
- 
+
+        // Ottieni l'elemento audio
+        let valentineSong = document.getElementById('valentineSong');
+
         let messages = ["Pls pls pls say yes", "Plsssss", "Are you really sure?", "Think again...", "Don't break my heart 💔"];
- 
+
         yesButton.addEventListener('click', () => {
             // Mostra i cuori
             document.querySelectorAll('.heart').forEach(heart => {
                 heart.style.display = 'block';
             });
- 
+
             // Mostra il messaggio finale, l'emoji e il contatore
             questionDiv.style.display = 'none';
             finalMessage.style.display = 'block';
             noMessages.style.display = 'none';
             mochaEmoji.style.display = 'block';
             loveCounter.style.display = 'block';
- 
+
+            // Avvia la canzone
+            valentineSong.play();
+
             // Avvia il contatore
             let count = 0;
             const target = 100000; // Numero finale
             const duration = 10000; // Durata dell'animazione in millisecondi (10 secondi)
             const increment = target / (duration / 16); // Incremento per ogni frame (60 FPS)
- 
+
             const interval = setInterval(() => {
                 count += increment;
                 if (count >= target) {
@@ -280,7 +289,7 @@
                 document.getElementById('count').textContent = Math.floor(count); // Aggiorna il numero visualizzato
             }, 16); // Aggiorna ogni 16 millisecondi (circa 60 FPS)
         });
- 
+
         noButton.addEventListener('click', () => {
             noMessages.style.display = 'block';
             messageText.textContent = messages[Math.floor(Math.random() * messages.length)];
