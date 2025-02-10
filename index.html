@@ -131,7 +131,7 @@
             font-size: 18px;
             animation: fall 5s linear infinite;
             user-select: none;
-            display: none;
+            display: none; /* Nascondi all'inizio */
         }
 
         .heart:nth-child(1) { left: 5%; animation-delay: 0s; }
@@ -216,14 +216,15 @@
         </div>
 
         <div id="finalMessage">
-            <p>Ich hätte nie erwartet, eine solche Person wie dich kennenzulernen.</p>
-            <p>Du hast so viele wunderbare Eigenschaften: Du bist intelligent, liebenswürdig, fürsorglich und reif.</p>
-            <p>Es gibt Menschen, die still und leise in unser Leben treten, und andere, die einen bleibenden Eindruck hinterlassen. Du bist eine von denen, die mit ihrer Stärke und ihrem Geist die Welt zu einem besseren Ort machen. Du bist entschlossen, freundlich und hast eine Seele, die auf ihre eigene Weise erstrahlt.</p>
-            <p>Ich wünschte so sehr, wir könnten zusammen sein, aber die Entfernung und andere Umstände trennen uns.</p>
-            <p>Trotzdem habe ich mir gedacht, dir dieses kleine Geschenk zu machen. Es ist nicht viel, aber ich möchte, dass du dich besonders fühlst.</p>
-            <p>Heute ist nicht nur Valentinstag, sondern auch ein Tag, um dich daran zu erinnern, wie besonders du bist. Ich hoffe, dass du immer Menschen findest, die deinen Wert erkennen, wohin du auch gehst.</p>
-            <p>Ich liebe dich wahnsinnig.</p>
-            <p>Frohen Valentinstag, Freya.</p>
+            <!-- Ogni paragrafo è in un contenitore separato -->
+            <p id="message1"></p>
+            <p id="message2"></p>
+            <p id="message3"></p>
+            <p id="message4"></p>
+            <p id="message5"></p>
+            <p id="message6"></p>
+            <p id="message7"></p>
+            <p id="message8"></p>
         </div>
 
         <!-- Contatore di "Ich liebe dich" -->
@@ -258,6 +259,33 @@
 
         let messages = ["Pls pls pls say yes", "Plsssss", "Are you really sure?", "Think again...", "Don't break my heart 💔"];
 
+        // Testo del messaggio finale
+        const messageLines = [
+            "Ich hätte nie erwartet, eine solche Person wie dich kennenzulernen.",
+            "Du hast so viele wunderbare Eigenschaften: Du bist intelligent, liebenswürdig, fürsorglich und reif.",
+            "Es gibt Menschen, die still und leise in unser Leben treten, und andere, die einen bleibenden Eindruck hinterlassen. Du bist eine von denen, die mit ihrer Stärke und ihrem Geist die Welt zu einem besseren Ort machen. Du bist entschlossen, freundlich und hast eine Seele, die auf ihre eigene Weise erstrahlt.",
+            "Ich wünschte so sehr, wir könnten zusammen sein, aber die Entfernung und andere Umstände trennen uns.",
+            "Trotzdem habe ich mir gedacht, dir dieses kleine Geschenk zu machen. Es ist nicht viel, aber ich möchte, dass du dich besonders fühlst.",
+            "Heute ist nicht nur Valentinstag, sondern auch ein Tag, um dich daran zu erinnern, wie besonders du bist. Ich hoffe, dass du immer Menschen findest, die deinen Wert erkennen, wohin du auch gehst.",
+            "Ich liebe dich wahnsinnig.",
+            "Frohen Valentinstag, Freya."
+        ];
+
+        // Funzione per l'effetto di scrittura
+        function typeWriter(element, text, speed, callback) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
+
         yesButton.addEventListener('click', () => {
             // Mostra i cuori
             document.querySelectorAll('.heart').forEach(heart => {
@@ -273,6 +301,16 @@
 
             // Avvia la canzone
             valentineSong.play();
+
+            // Avvia l'effetto di scrittura per ogni paragrafo
+            const paragraphs = document.querySelectorAll('#finalMessage p');
+            let delay = 0;
+            paragraphs.forEach((paragraph, index) => {
+                setTimeout(() => {
+                    typeWriter(paragraph, messageLines[index], 50);
+                }, delay);
+                delay += messageLines[index].length * 50 + 1000; // Aggiungi un ritardo tra i paragrafi
+            });
 
             // Avvia il contatore
             let count = 0;
