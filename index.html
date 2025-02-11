@@ -134,6 +134,20 @@
             color: #e63946;
         }
 
+        /* Animazione cuori che cadono */
+        @keyframes fall {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .heart-fall {
+            position: absolute;
+            top: -50px;
+            font-size: 1.5rem;
+            color: #e63946;
+            animation: fall 5s linear infinite;
+        }
+
         /* Animazione per i cuori */
         @keyframes fallWithTrail {
             0% { transform: translateY(-100%); opacity: 1; }
@@ -254,16 +268,15 @@
 </head>
 <body>
     <!-- Cuori animati -->
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
-    <div class="heart">❤️</div>
+    <div class="heart-fall" style="left: 5%; animation-delay: 0s;">❤️</div>
+    <div class="heart-fall" style="left: 15%; animation-delay: 1s;">❤️</div>
+    <div class="heart-fall" style="left: 25%; animation-delay: 2s;">❤️</div>
+    <div class="heart-fall" style="left: 35%; animation-delay: 3s;">❤️</div>
+    <div class="heart-fall" style="left: 45%; animation-delay: 4s;">❤️</div>
+    <div class="heart-fall" style="left: 55%; animation-delay: 5s;">❤️</div>
+    <div class="heart-fall" style="left: 65%; animation-delay: 6s;">❤️</div>
+    <div class="heart-fall" style="left: 75%; animation-delay: 7s;">❤️</div>
+    <div class="heart-fall" style="left: 85%; animation-delay: 8s;">❤️</div>
 
     <div class="container">
         <h1>Happy Valentine's Day, Freya!</h1>
@@ -333,10 +346,10 @@
             "Du hast so viele wunderbare Eigenschaften: Du bist intelligent, liebenswürdig, fürsorglich und reif.",
             "Es gibt Menschen, die still und leise in unser Leben treten, und andere, die einen bleibenden Eindruck hinterlassen. Du bist eine von denen, die mit ihrer Stärke und ihrem Geist die Welt zu einem besseren Ort machen. Du bist entschlossen, freundlich und hast eine Seele, die auf ihre eigene Weise erstrahlt.",
             "Ich wünschte so sehr, wir könnten zusammen sein, aber die Entfernung und andere Umstände trennen uns.",
-            "Trotzdem habe ich mir gedacht, dir dieses kleine Geschenk zu machen. Es ist nicht viel, aber ich möchte, dass du dich besonders fühlst.",
-            "Heute ist nicht nur Valentinstag, sondern auch ein Tag, um dich daran zu erinnern, wie besonders du bist. Ich hoffe, dass du immer Menschen findest, die deinen Wert erkennen, wohin du auch gehst.",
-            "Ich liebe dich wahnsinnig.",
-            "Frohen Valentinstag, Freya."
+            "Trotzdem habe ich mir gedacht, dir dieses kleine Geschenk zu machen. Es ist nicht viel, ma io voglio che tu ti senta speciale.",
+            "Oggi non è solo San Valentino, ma anche un giorno per ricordarti quanto sei speciale. Spero che tu trovi sempre persone che riconoscano il tuo valore, ovunque tu vada.",
+            "Ti amo tantissimo.",
+            "Buon San Valentino, Freya."
         ];
 
         // Funzione per l'effetto di scrittura con cursore, pausa e scia
@@ -402,7 +415,7 @@
             }, 1000);
 
             // Mostra i cuori
-            document.querySelectorAll('.heart').forEach(heart => {
+            document.querySelectorAll('.heart-fall').forEach(heart => {
                 heart.style.display = 'block';
             });
 
