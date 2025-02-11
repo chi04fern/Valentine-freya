@@ -6,9 +6,9 @@
     <title>Happy Valentine's Day Freya</title>
     <style>
         body {
-            background-color: #f9c6d1;
-            font-family: 'Arial', sans-serif;
-            color: #333;
+            background: linear-gradient(-45deg, #f9c6d1, #f1a7c1, #e63946, #d62839);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,6 +19,12 @@
             position: relative;
             flex-direction: column;
             overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
@@ -104,16 +110,16 @@
             background-color: #fff3f5;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            display: none; /* Nascondi all'inizio */
+            display: none;
         }
 
         #mocha-emoji {
             margin-top: 20px;
-            display: none; /* Nascondi all'inizio */
+            display: none;
         }
 
         #love-counter {
-            display: none; /* Nascondi all'inizio */
+            display: none;
             margin-top: 20px;
             font-size: 1.2rem;
             color: #e63946;
@@ -131,7 +137,7 @@
             font-size: 18px;
             animation: fall 5s linear infinite;
             user-select: none;
-            display: none; /* Nascondi all'inizio */
+            display: none;
         }
 
         .heart:nth-child(1) { left: 5%; animation-delay: 0s; }
