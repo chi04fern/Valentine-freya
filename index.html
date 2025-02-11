@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
             font-family: 'Life Savers', cursive;
@@ -116,7 +117,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             display: none;
-            max-height: 300px;
+            max-height: 60vh;
             overflow-y: auto;
             scroll-behavior: smooth;
         }
@@ -194,28 +195,55 @@
             animation: textTrail 0.5s ease-out;
         }
 
+        /* Effetto di scia ai pulsanti */
+        @keyframes buttonTrail {
+            0% { box-shadow: 0 0 10px rgba(230, 57, 70, 0.8), 0 0 20px rgba(230, 57, 70, 0.8); }
+            100% { box-shadow: 0 0 30px rgba(230, 57, 70, 0), 0 0 50px rgba(230, 57, 70, 0); }
+        }
+
+        .yes, .no {
+            animation: buttonTrail 1s ease-out;
+        }
+
+        /* Effetto di scia al tocco */
+        @keyframes touchTrail {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.5); opacity: 0; }
+        }
+
+        .touch-trail {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+            border-radius: 50%;
+            animation: touchTrail 0.5s ease-out;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
         /* Media query per dispositivi mobili */
         @media (max-width: 600px) {
-            .container {
-                width: 95%;
-                max-width: none;
-                padding: 10px;
-            }
-
             h1 {
                 font-size: 1.8rem;
+            }
+
+            .container {
+                width: 95%;
+                padding: 10px;
             }
 
             .question, .answer {
                 font-size: 1rem;
             }
 
-            #finalMessage p {
+            .yes, .no {
+                padding: 8px 16px;
                 font-size: 0.9rem;
             }
 
-            #love-counter {
-                font-size: 1rem;
+            #finalMessage p {
+                font-size: 0.9rem;
             }
 
             .heart {
@@ -339,7 +367,40 @@
             type();
         }
 
+        // Funzione per scrivere i paragrafi in sequenza
+        function writeParagraphs(paragraphs, messages, index = 0) {
+            if (index >= paragraphs.length) return; // Fermati se tutti i paragrafi sono stati scritti
+
+            const paragraph = paragraphs[index];
+            const text = messages[index];
+
+            // Scrivi il paragrafo corrente
+            typeWriter(paragraph, text, 50, () => {
+                // Quando il paragrafo è completato, passa al successivo
+                writeParagraphs(paragraphs, messages, index + 1);
+            });
+        }
+
         yesButton.addEventListener('click', () => {
+            // Avvia l'effetto confetti
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Crea un elemento luce
+            const light = document.createElement('div');
+            light.classList.add('light-explosion');
+            light.style.top = `${yesButton.offsetTop + yesButton.offsetHeight / 2}px`;
+            light.style.left = `${yesButton.offsetLeft + yesButton.offsetWidth / 2}px`;
+            document.body.appendChild(light);
+
+            // Rimuovi l'elemento luce dopo l'animazione
+            setTimeout(() => {
+                light.remove();
+            }, 1000);
+
             // Mostra i cuori
             document.querySelectorAll('.heart').forEach(heart => {
                 heart.style.display = 'block';
@@ -357,13 +418,7 @@
 
             // Avvia l'effetto di scrittura per ogni paragrafo
             const paragraphs = document.querySelectorAll('#finalMessage p');
-            let delay = 0;
-            paragraphs.forEach((paragraph, index) => {
-                setTimeout(() => {
-                    typeWriter(paragraph, messageLines[index], 50);
-                }, delay);
-                delay += messageLines[index].length * 50 + 1000; // Aggiungi un ritardo tra i paragrafi
-            });
+            writeParagraphs(paragraphs, messageLines);
 
             // Avvia il contatore
             let count = 0;
@@ -390,6 +445,20 @@
             } else {
                 yesButton.style.transform = `scale(2.5)`;
             }
+        });
+
+        // Effetto di scia al tocco
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            const trail = document.createElement('div');
+            trail.classList.add('touch-trail');
+            trail.style.top = `${touch.pageY}px`;
+            trail.style.left = `${touch.pageX}px`;
+            document.body.appendChild(trail);
+
+            setTimeout(() => {
+                trail.remove();
+            }, 500);
         });
     </script>
 </body>
