@@ -320,7 +320,10 @@
     </div>
 
     <!-- Elemento audio per la canzone -->
-    <audio id="valentineSong" src="valentine.mp3"></audio>
+    <audio id="valentineSong">
+    <source src="valentine.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+    </audio>
 
     <script>
         let yesButton = document.getElementById('yesButton');
@@ -336,6 +339,11 @@
 
         // Ottieni l'elemento audio
         let valentineSong = document.getElementById('valentineSong');
+
+// Aggiungi un gestore di errori per l'audio
+valentineSong.addEventListener('error', function() {
+    console.error("Errore durante il caricamento dell'audio:", valentineSong.error);
+});
 
         let messages = ["Pls pls pls say yes", "Plsssss", "Are you really sure?", "Think again...", "Don't break my heart 💔"];
 
