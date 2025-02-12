@@ -148,32 +148,31 @@
             animation: fall 5s linear infinite;
         }
 
-        /* Animazione per i cuori */
-        @keyframes fallWithTrail {
-            0% { transform: translateY(-100%); opacity: 1; }
-            100% { transform: translateY(100vh); opacity: 0; }
-        }
-
-        .heart {
-            position: absolute;
-            color: #e63946;
-            font-size: 18px;
-            animation: fallWithTrail 5s linear infinite;
-            user-select: none;
+        /* Stile per la GIF */
+        #special-gif {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 1000;
             display: none;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);
+            width: 300px; /* Regola le dimensioni della GIF */
+            height: auto;
         }
 
-        .heart:nth-child(1) { left: 5%; animation-delay: 0s; }
-        .heart:nth-child(2) { left: 15%; animation-delay: 1s; }
-        .heart:nth-child(3) { left: 25%; animation-delay: 2s; }
-        .heart:nth-child(4) { left: 35%; animation-delay: 3s; }
-        .heart:nth-child(5) { left: 45%; animation-delay: 4s; }
-        .heart:nth-child(6) { left: 55%; animation-delay: 5s; }
-        .heart:nth-child(7) { left: 65%; animation-delay: 6s; }
-        .heart:nth-child(8) { left: 75%; animation-delay: 7s; }
-        .heart:nth-child(9) { left: 85%; animation-delay: 8s; }
+        #special-gif.show {
+            opacity: 1;
+            display: block;
+        }
 
+        #special-gif.hide {
+            opacity: 0;
+            display: block;
+        }
+
+        /* Animazioni */
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
@@ -184,7 +183,6 @@
             50% { opacity: 0; }
         }
 
-        /* Cursore lampeggiante */
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -199,7 +197,6 @@
             vertical-align: middle;
         }
 
-        /* Effetto di scia al testo */
         @keyframes textTrail {
             0% { opacity: 1; text-shadow: 0 0 10px rgba(230, 57, 70, 0.8); }
             100% { opacity: 0; text-shadow: 0 0 30px rgba(230, 57, 70, 0); }
@@ -209,7 +206,6 @@
             animation: textTrail 0.5s ease-out;
         }
 
-        /* Effetto di scia ai pulsanti */
         @keyframes buttonTrail {
             0% { box-shadow: 0 0 10px rgba(230, 57, 70, 0.8), 0 0 20px rgba(230, 57, 70, 0.8); }
             100% { box-shadow: 0 0 30px rgba(230, 57, 70, 0), 0 0 50px rgba(230, 57, 70, 0); }
@@ -219,7 +215,6 @@
             animation: buttonTrail 1s ease-out;
         }
 
-        /* Effetto di scia al tocco */
         @keyframes touchTrail {
             0% { transform: scale(1); opacity: 1; }
             100% { transform: scale(0.5); opacity: 0; }
@@ -296,8 +291,8 @@
             <p id="messageText">You sure?</p>
         </div>
 
+        <!-- Messaggio finale -->
         <div id="finalMessage">
-            <!-- Ogni paragrafo è in un contenitore separato -->
             <p id="message1"></p>
             <p id="message2"></p>
             <p id="message3"></p>
@@ -313,6 +308,9 @@
             <p>Ich liebe dich <span id="count">0</span> Mal. 💖</p>
         </div>
     </div>
+
+    <!-- GIF speciale -->
+    <img id="special-gif" src="https://cdn3.emoji.gg/emojis/11596-milkandmochalove4.gif" alt="milkandmochalove4" />
 
     <!-- Emoji di Mocha -->
     <div id="mocha-emoji">
@@ -333,6 +331,7 @@
         let finalMessage = document.getElementById('finalMessage');
         let mochaEmoji = document.getElementById('mocha-emoji');
         let loveCounter = document.getElementById('love-counter');
+        let specialGif = document.getElementById('special-gif');
         let yesSize = 1;
 
         // Ottieni l'elemento audio
@@ -352,101 +351,56 @@
             "Frohen Valentinstag, Freya."
         ];
 
-        // Funzione per l'effetto di scrittura con cursore, pausa e scia
-        function typeWriter(element, text, speed, callback) {
-            let i = 0;
-            const cursor = document.createElement('span');
-            cursor.classList.add('cursor');
-            element.appendChild(cursor); // Aggiungi il cursore
-
-            function type() {
-                if (i < text.length) {
-                    const char = text.charAt(i);
-                    const span = document.createElement('span');
-                    span.textContent = char;
-                    span.classList.add('text-trail');
-                    element.insertBefore(span, cursor);
-                    i++;
-                    // Fai scorrere il contenuto verso il basso
-                    element.scrollTop = element.scrollHeight;
-                    // Aggiungi una pausa più lunga dopo uno spazio
-                    const delay = char === ' ' ? speed * 3 : speed;
-                    setTimeout(type, delay);
-                } else {
-                    cursor.remove(); // Rimuovi il cursore alla fine
-                    if (callback) callback();
-                }
-            }
-            type();
-        }
-
-        // Funzione per scrivere i paragrafi in sequenza
-        function writeParagraphs(paragraphs, messages, index = 0) {
-            if (index >= paragraphs.length) return; // Fermati se tutti i paragrafi sono stati scritti
-
-            const paragraph = paragraphs[index];
-            const text = messages[index];
-
-            // Scrivi il paragrafo corrente
-            typeWriter(paragraph, text, 50, () => {
-                // Quando il paragrafo è completato, passa al successivo
-                writeParagraphs(paragraphs, messages, index + 1);
-            });
-        }
-
         yesButton.addEventListener('click', () => {
-            // Avvia l'effetto confetti
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-
-            // Crea un elemento luce
-            const light = document.createElement('div');
-            light.classList.add('light-explosion');
-            light.style.top = `${yesButton.offsetTop + yesButton.offsetHeight / 2}px`;
-            light.style.left = `${yesButton.offsetLeft + yesButton.offsetWidth / 2}px`;
-            document.body.appendChild(light);
-
-            // Rimuovi l'elemento luce dopo l'animazione
-            setTimeout(() => {
-                light.remove();
-            }, 1000);
-
-            // Mostra i cuori
-            document.querySelectorAll('.heart-fall').forEach(heart => {
-                heart.style.display = 'block';
-            });
-
-            // Mostra il messaggio finale, l'emoji e il contatore
+            // Nascondi la domanda e mostra la GIF
             questionDiv.style.display = 'none';
-            finalMessage.style.display = 'block';
-            noMessages.style.display = 'none';
-            mochaEmoji.style.display = 'block';
-            loveCounter.style.display = 'block';
+            specialGif.style.display = 'block';
+            specialGif.classList.add('show');
 
-            // Avvia la canzone
-            valentineSong.play();
+            // Aspetta 2 secondi per l'animazione di apparizione
+            setTimeout(() => {
+                specialGif.classList.remove('show');
+                specialGif.classList.add('hide');
 
-            // Avvia l'effetto di scrittura per ogni paragrafo
-            const paragraphs = document.querySelectorAll('#finalMessage p');
-            writeParagraphs(paragraphs, messageLines);
+                // Aspetta 2 secondi per l'animazione di scomparsa
+                setTimeout(() => {
+                    specialGif.style.display = 'none';
 
-            // Avvia il contatore
-            let count = 0;
-            const target = 100000; // Numero finale
-            const duration = 60000; // Durata dell'animazione in millisecondi (10 secondi)
-            const increment = target / (duration / 16); // Incremento per ogni frame (60 FPS)
+                    // Mostra il messaggio finale e i confetti
+                    finalMessage.style.display = 'block';
+                    mochaEmoji.style.display = 'block';
+                    loveCounter.style.display = 'block';
 
-            const interval = setInterval(() => {
-                count += increment;
-                if (count >= target) {
-                    count = target; // Ferma il contatore al numero finale
-                    clearInterval(interval);
-                }
-                document.getElementById('count').textContent = Math.floor(count); // Aggiorna il numero visualizzato
-            }, 16); // Aggiorna ogni 16 millisecondi (circa 60 FPS)
+                    // Avvia i confetti
+                    confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+
+                    // Avvia la canzone
+                    valentineSong.play();
+
+                    // Scrivi il messaggio finale
+                    const paragraphs = document.querySelectorAll('#finalMessage p');
+                    writeParagraphs(paragraphs, messageLines);
+
+                    // Avvia il contatore
+                    let count = 0;
+                    const target = 100000;
+                    const duration = 60000;
+                    const increment = target / (duration / 16);
+
+                    const interval = setInterval(() => {
+                        count += increment;
+                        if (count >= target) {
+                            count = target;
+                            clearInterval(interval);
+                        }
+                        document.getElementById('count').textContent = Math.floor(count);
+                    }, 16);
+                }, 2000); // Tempo di scomparsa della GIF
+            }, 5000); // Tempo di visualizzazione della GIF
         });
 
         noButton.addEventListener('click', () => {
@@ -460,19 +414,41 @@
             }
         });
 
-        // Effetto di scia al tocco
-        document.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            const trail = document.createElement('div');
-            trail.classList.add('touch-trail');
-            trail.style.top = `${touch.pageY}px`;
-            trail.style.left = `${touch.pageX}px`;
-            document.body.appendChild(trail);
+        // Funzione per l'effetto di scrittura
+        function typeWriter(element, text, speed, callback) {
+            let i = 0;
+            const cursor = document.createElement('span');
+            cursor.classList.add('cursor');
+            element.appendChild(cursor);
 
-            setTimeout(() => {
-                trail.remove();
-            }, 500);
-        });
+            function type() {
+                if (i < text.length) {
+                    const char = text.charAt(i);
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    span.classList.add('text-trail');
+                    element.insertBefore(span, cursor);
+                    i++;
+                    element.scrollTop = element.scrollHeight;
+                    const delay = char === ' ' ? speed * 3 : speed;
+                    setTimeout(type, delay);
+                } else {
+                    cursor.remove();
+                    if (callback) callback();
+                }
+            }
+            type();
+        }
+
+        // Funzione per scrivere i paragrafi in sequenza
+        function writeParagraphs(paragraphs, messages, index = 0) {
+            if (index >= paragraphs.length) return;
+            const paragraph = paragraphs[index];
+            const text = messages[index];
+            typeWriter(paragraph, text, 50, () => {
+                writeParagraphs(paragraphs, messages, index + 1);
+            });
+        }
     </script>
 </body>
 </html>
