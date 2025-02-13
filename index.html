@@ -259,6 +259,27 @@
                 font-size: 16px;
             }
         }
+
+        #mocha-emoji {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 1000;
+        }
+
+        #mocha-emoji.show {
+            opacity: 1;
+            display: block;
+        }
+
+        #mocha-emoji.hide {
+            opacity: 0;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -315,7 +336,7 @@
     <!-- Emoji di Mocha -->
     <div id="mocha-emoji">
         <a href="https://emoji.gg/emoji/56142-mocha">
-            <img src="https://cdn3.emoji.gg/emojis/56142-mocha.gif" width="128px" height="128px" alt="Mocha">
+            <img src="https://cdn3.emoji.gg/emojis/56142-mocha.gif" width="200px" height="200px" alt="Mocha">
         </a>
     </div>
 
@@ -340,10 +361,10 @@
         // Ottieni l'elemento audio
         let valentineSong = document.getElementById('valentineSong');
 
-// Aggiungi un gestore di errori per l'audio
-valentineSong.addEventListener('error', function() {
-    console.error("Errore durante il caricamento dell'audio:", valentineSong.error);
-});
+        // Aggiungi un gestore di errori per l'audio
+        valentineSong.addEventListener('error', function() {
+            console.error("Errore durante il caricamento dell'audio:", valentineSong.error);
+        });
 
         let messages = ["Pls pls pls say yes", "Plsssss", "Are you really sure?", "Think again...", "Don't break my heart 💔"];
 
@@ -376,7 +397,6 @@ valentineSong.addEventListener('error', function() {
 
                     // Mostra il messaggio finale e i confetti
                     finalMessage.style.display = 'block';
-                    mochaEmoji.style.display = 'block';
                     loveCounter.style.display = 'block';
 
                     // Avvia i confetti
@@ -391,7 +411,24 @@ valentineSong.addEventListener('error', function() {
 
                     // Scrivi il messaggio finale
                     const paragraphs = document.querySelectorAll('#finalMessage p');
-                    writeParagraphs(paragraphs, messageLines);
+                    writeParagraphs(paragraphs, messageLines, () => {
+                        // Dopo che il messaggio è stato completamente visualizzato
+                        // Mostra l'emoji di Mocha
+                        mochaEmoji.style.display = 'block';
+                        mochaEmoji.classList.add('show');
+
+                        // Aspetta 5 secondi
+                        setTimeout(() => {
+                            // Fai scomparire l'emoji di Mocha
+                            mochaEmoji.classList.remove('show');
+                            mochaEmoji.classList.add('hide');
+
+                            // Aspetta 1 secondo per l'animazione di scomparsa
+                            setTimeout(() => {
+                                mochaEmoji.style.display = 'none';
+                            }, 1000); // Tempo di scomparsa
+                        }, 10000); // Tempo di visualizzazione
+                    });
 
                     // Avvia il contatore
                     let count = 0;
@@ -449,12 +486,15 @@ valentineSong.addEventListener('error', function() {
         }
 
         // Funzione per scrivere i paragrafi in sequenza
-        function writeParagraphs(paragraphs, messages, index = 0) {
-            if (index >= paragraphs.length) return;
+        function writeParagraphs(paragraphs, messages, callback, index = 0) {
+            if (index >= paragraphs.length) {
+                if (callback) callback();
+                return;
+            }
             const paragraph = paragraphs[index];
             const text = messages[index];
             typeWriter(paragraph, text, 50, () => {
-                writeParagraphs(paragraphs, messages, index + 1);
+                writeParagraphs(paragraphs, messages, callback, index + 1);
             });
         }
     </script>
