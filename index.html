@@ -571,12 +571,13 @@
                     elements.finalMessage.style.display = 'block';
                     elements.loveCounter.style.display = 'block';
 
-                    // Pulisci i paragrafi prima di scrivere
-                    const paragraphs = document.querySelectorAll('#finalMessage p');
-                    paragraphs.forEach(p => p.innerHTML = '');
-
-                    // Avvia l'effetto typewriter
-                    writeParagraphs(paragraphs, messageLines, () => {
+                    // Scrivi direttamente nel contenitore
+                    elements.finalMessage.innerHTML = '<div id="messageContent"></div>';
+                    const messageContainer = document.getElementById('messageContent');
+                    
+                    // Scrivi il messaggio completo
+                    let fullMessage = messageLines.join('\n\n');
+                    typeWriter(messageContainer, fullMessage, 40, () => {
                         // Dopo che il messaggio è completato, mostra Mocha
                         setTimeout(() => {
                             elements.mochaEmoji.style.display = 'block';
@@ -614,92 +615,4 @@
             }, 3000);
         });
 
-        // Funzione typewriter migliorata
-        function typeWriter(element, text, speed, callback) {
-            let i = 0;
-            element.innerHTML = ''; // Pulisci il contenuto prima di iniziare
-            
-            const cursor = document.createElement('span');
-            cursor.classList.add('cursor');
-            element.appendChild(cursor);
-
-            function type() {
-                if (i < text.length) {
-                    const char = text.charAt(i);
-                    const textNode = document.createTextNode(char);
-                    element.insertBefore(textNode, cursor);
-                    i++;
-                    
-                    // Scorri per mostrare il testo che si sta scrivendo
-                    element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    
-                    const delay = char === ' ' ? speed * 0.5 : 
-                                 char === '.' ? speed * 8 : 
-                                 char === ',' ? speed * 4 : speed;
-                    setTimeout(type, delay);
-                } else {
-                    cursor.remove();
-                    if (callback) callback();
-                }
-            }
-            type();
-        }
-
-        // Funzione per scrivere paragrafi in sequenza
-        function writeParagraphs(paragraphs, messages, callback, index = 0) {
-            if (index >= paragraphs.length || index >= messages.length) {
-                console.log('Messaggio completato!');
-                if (callback) callback();
-                return;
-            }
-            
-            const paragraph = paragraphs[index];
-            const text = messages[index];
-            
-            console.log(`Scrivendo paragrafo ${index + 1}: ${text.substring(0, 50)}...`);
-            
-            typeWriter(paragraph, text, 30, () => {
-                setTimeout(() => {
-                    writeParagraphs(paragraphs, messages, callback, index + 1);
-                }, 800); // Pausa più lunga tra i paragrafi
-            });
-        }
-
-        // Contatore animato
-        function animateCounter() {
-            let count = 0;
-            const target = 100000;
-            const duration = 45000;
-            const increment = target / (duration / 50);
-
-            const interval = setInterval(() => {
-                count += increment;
-                if (count >= target) {
-                    count = target;
-                    clearInterval(interval);
-                }
-                document.getElementById('count').textContent = Math.floor(count).toLocaleString();
-            }, 50);
-        }
-
-        // Inizializzazione
-        document.addEventListener('DOMContentLoaded', () => {
-            createFloatingHearts();
-            
-            // Effetto hover sui pulsanti
-            document.querySelectorAll('.btn').forEach(btn => {
-                btn.addEventListener('mouseenter', function() {
-                    this.style.transform = this.classList.contains('yes') ? 
-                        `scale(${yesSize * 1.05}) translateY(-2px)` : 
-                        'translateY(-2px)';
-                });
-                
-                btn.addEventListener('mouseleave', function() {
-                    this.style.transform = this.classList.contains('yes') ? 
-                        `scale(${yesSize})` : '';
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+        // Funzione typewriter semp
