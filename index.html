@@ -571,18 +571,25 @@
                     elements.finalMessage.style.display = 'block';
                     elements.loveCounter.style.display = 'block';
 
+                    // Pulisci i paragrafi prima di scrivere
                     const paragraphs = document.querySelectorAll('#finalMessage p');
-                    writeParagraphs(paragraphs, messageLines, () => {
-                        elements.mochaEmoji.style.display = 'block';
-                        elements.mochaEmoji.classList.add('show');
+                    paragraphs.forEach(p => p.innerHTML = '');
 
+                    // Avvia l'effetto typewriter
+                    writeParagraphs(paragraphs, messageLines, () => {
+                        // Dopo che il messaggio è completato, mostra Mocha
                         setTimeout(() => {
-                            elements.mochaEmoji.classList.remove('show');
-                            elements.mochaEmoji.classList.add('hide');
+                            elements.mochaEmoji.style.display = 'block';
+                            elements.mochaEmoji.classList.add('show');
+
                             setTimeout(() => {
-                                elements.mochaEmoji.style.display = 'none';
-                            }, 1000);
-                        }, 8000);
+                                elements.mochaEmoji.classList.remove('show');
+                                elements.mochaEmoji.classList.add('hide');
+                                setTimeout(() => {
+                                    elements.mochaEmoji.style.display = 'none';
+                                }, 1000);
+                            }, 8000);
+                        }, 1000);
                     });
 
                     // Contatore animato
@@ -610,6 +617,8 @@
         // Funzione typewriter migliorata
         function typeWriter(element, text, speed, callback) {
             let i = 0;
+            element.innerHTML = ''; // Pulisci il contenuto prima di iniziare
+            
             const cursor = document.createElement('span');
             cursor.classList.add('cursor');
             element.appendChild(cursor);
@@ -617,14 +626,12 @@
             function type() {
                 if (i < text.length) {
                     const char = text.charAt(i);
-                    const span = document.createElement('span');
-                    span.textContent = char;
-                    element.insertBefore(span, cursor);
+                    const textNode = document.createTextNode(char);
+                    element.insertBefore(textNode, cursor);
                     i++;
                     
-                    if (element.scrollIntoView) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                    }
+                    // Scorri per mostrare il testo che si sta scrivendo
+                    element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     
                     const delay = char === ' ' ? speed * 0.5 : 
                                  char === '.' ? speed * 8 : 
@@ -640,16 +647,21 @@
 
         // Funzione per scrivere paragrafi in sequenza
         function writeParagraphs(paragraphs, messages, callback, index = 0) {
-            if (index >= paragraphs.length) {
+            if (index >= paragraphs.length || index >= messages.length) {
+                console.log('Messaggio completato!');
                 if (callback) callback();
                 return;
             }
+            
             const paragraph = paragraphs[index];
             const text = messages[index];
+            
+            console.log(`Scrivendo paragrafo ${index + 1}: ${text.substring(0, 50)}...`);
+            
             typeWriter(paragraph, text, 30, () => {
                 setTimeout(() => {
                     writeParagraphs(paragraphs, messages, callback, index + 1);
-                }, 500);
+                }, 800); // Pausa più lunga tra i paragrafi
             });
         }
 
